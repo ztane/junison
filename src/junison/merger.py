@@ -87,6 +87,16 @@ class ObjectSetConflictHandler:
                 raise ValueError('{} doesn\'t have id field {}'
                                  .format(item, self._id_field))
 
+
+        if root is UNDEFINED:
+            root = []
+
+        if head is UNDEFINED:
+            head = []
+
+        if update is UNDEFINED:
+            update = []
+
         root_items = OrderedDict((get_id(item), item) for item in root)
         head_items = OrderedDict((get_id(item), item) for item in head)
         update_items = OrderedDict((get_id(item), item) for item in update)
@@ -153,10 +163,16 @@ class ObjectSetConflictHandler:
 
 class DictMerger:
     def merge(self, *, merger, path, root, head, update):
-        root_keys = set(root.keys())
-        head_keys = set(head.keys())
-        update_keys = set(update.keys())
-        all_keys = root_keys | head_keys | update_keys
+        if root is UNDEFINED:
+            root = {}
+
+        if head is UNDEFINED:
+            head = {}
+
+        if update is UNDEFINED:
+            update = {}
+
+        all_keys = set(root.keys()) | set(head.keys()) | set(update.keys())
 
         result = {}
 
